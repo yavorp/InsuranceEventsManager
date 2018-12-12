@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace InsuranceManager
+namespace InsuranceManager.Models
 {
     public class Workshop
     {
-        private List<Mechanic> mechanics;
+        private List<Mechanic> _mechanics;
     }
 }
