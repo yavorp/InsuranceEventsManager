@@ -31,9 +31,10 @@ namespace InsuranceManager.Models
         private string _firstName;
         private string _LastName;
         private DateTime _dateOfAccident;
+        private string _damageDescription;
 
-        public Status _status;
-        public DamageLevel _level; 
+        private Status _status;
+        public DamageLevel _level;
         #endregion
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -43,10 +44,22 @@ namespace InsuranceManager.Models
         public int Id => _id;
         public string RegNumber => _regNumber;
         public DateTime Date => _dateOfAccident;
+        public Status Status_Prop
+        {
+            get => _status;
+            set
+            {
+                if(value==Status.ToBeHandled)
+                {
+                    _status = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(_status)));
+                }
+            }
+        }
         #endregion
 
         #region Constructors
-        public Accident(int id, string regNumber, string firstName, string lastName, DateTime date, Status status, DamageLevel lvl)
+        public Accident(int id, string regNumber, string firstName, string lastName, DateTime date, Status status, DamageLevel lvl,string damageDescription)
         {
             _id = id;
             _regNumber = regNumber;
@@ -57,10 +70,10 @@ namespace InsuranceManager.Models
             _level = lvl;
         }
 
-        public Accident() : this(0, default(string), default(string), default(string), default(DateTime), Status.None, DamageLevel.None)
+        public Accident() : this(0, default(string), default(string), default(string), default(DateTime), Status.None, DamageLevel.None,default(string))
         { }
 
-        public Accident(Accident accident) : this(accident.Id, accident.RegNumber, accident._firstName, accident._LastName, accident.Date, accident._status, accident._level)
+        public Accident(Accident accident) : this(accident.Id, accident.RegNumber, accident._firstName, accident._LastName, accident.Date, accident._status, accident._level,accident._damageDescription)
         { }
         #endregion
 
