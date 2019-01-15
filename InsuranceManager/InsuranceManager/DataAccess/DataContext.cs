@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -11,7 +12,11 @@ namespace InsuranceManager.DataAccess
 {
     public class DataContext : DbContext
     {
-        public DataContext() : base() { }
+        public DataContext() : base("AccessDbContext")
+        {
+           
+        }
+       
         public DbSet<Accident> Accidents { get; set; }
         public DbSet<Models.Task> Tasks { get; set; }
         public DbSet<Workshop> Workshops { get; set; }
@@ -22,6 +27,7 @@ namespace InsuranceManager.DataAccess
                 action(context);
             }
         }
+      
 
         public void Test()
         {

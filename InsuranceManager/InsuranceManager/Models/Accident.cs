@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,7 +28,7 @@ namespace InsuranceManager.Models
     {
         #region Data members
         private int _id;
-        private string _regNumber;
+        private string _registrationNumber;
         private string _firstName;
         private string _LastName;
         private DateTime _dateOfAccident;
@@ -41,9 +42,14 @@ namespace InsuranceManager.Models
 
         #region Properties
         public string FullName => $"{_firstName} {_LastName}";
-        public int Id => _id;
-        public string RegNumber => _regNumber;
+        [Key]
+        public int Id { get; set; }
+        public string RegistrationNumber => _registrationNumber;
         public DateTime Date => _dateOfAccident;
+        public string Description => _damageDescription;
+
+        public DateTime CreatedTime { get; set; }
+        public DateTime LastModified { get; set; }
         public Status Status_Prop
         {
             get => _status;
@@ -62,7 +68,7 @@ namespace InsuranceManager.Models
         public Accident(int id, string regNumber, string firstName, string lastName, DateTime date, Status status, DamageLevel lvl,string damageDescription)
         {
             _id = id;
-            _regNumber = regNumber;
+            _registrationNumber = regNumber;
             _firstName = firstName;
             _LastName = lastName;
             _dateOfAccident = date;
@@ -73,7 +79,7 @@ namespace InsuranceManager.Models
         public Accident() : this(0, default(string), default(string), default(string), default(DateTime), Status.None, DamageLevel.None,default(string))
         { }
 
-        public Accident(Accident accident) : this(accident.Id, accident.RegNumber, accident._firstName, accident._LastName, accident.Date, accident._status, accident._level,accident._damageDescription)
+        public Accident(Accident accident) : this(accident.Id, accident.RegistrationNumber, accident._firstName, accident._LastName, accident.Date, accident._status, accident._level,accident._damageDescription)
         { }
         #endregion
 
