@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace InsuranceManager.Models
 {
-    public enum Status
+    public enum StatusProp
     {
         None=0,
         ToBeHandled = 1,
@@ -24,65 +24,28 @@ namespace InsuranceManager.Models
         None = 0
     }
 
-    public class Accident:INotifyPropertyChanged
+    public class Accident
     {
-        #region Data members
-        private int _id;
-        private string _registrationNumber;
-        private string _firstName;
-        private string _LastName;
-        private DateTime _dateOfAccident;
-        private string _damageDescription;
-
-        private Status _status;
-        public DamageLevel _level;
-        #endregion
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
         #region Properties
-        public string FullName => $"{_firstName} {_LastName}";
         [Key]
         public int Id { get; set; }
-        public string RegistrationNumber => _registrationNumber;
-        public DateTime Date => _dateOfAccident;
-        public string Description => _damageDescription;
-
-        public DateTime CreatedTime { get; set; }
+        [Required]
+        public string RegistrationNumber { get; set; }
+        [Required]
+        public string FirstName { get; set; }
+        [Required]
+        public string LastName { get; set; }
+        [Required]
+        public string Description { get; set; }
+        [Required]
+        public DateTime AccidentDate { get; set; }
+        public DateTime CreatedDate { get; set; }
         public DateTime LastModified { get; set; }
-        public Status Status_Prop
-        {
-            get => _status;
-            set
-            {
-                if(value==Status.ToBeHandled)
-                {
-                    _status = value;
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(_status)));
-                }
-            }
-        }
+        public StatusProp Status { get; set; }
+        public DamageLevel DamageLevel { get; set; }
+
+        public event PropertyChangedEventHandler PropertyChanged;
         #endregion
-
-        #region Constructors
-        public Accident(int id, string regNumber, string firstName, string lastName, DateTime date, Status status, DamageLevel lvl,string damageDescription)
-        {
-            _id = id;
-            _registrationNumber = regNumber;
-            _firstName = firstName;
-            _LastName = lastName;
-            _dateOfAccident = date;
-            _status = status;
-            _level = lvl;
-        }
-
-        public Accident() : this(0, default(string), default(string), default(string), default(DateTime), Status.None, DamageLevel.None,default(string))
-        { }
-
-        public Accident(Accident accident) : this(accident.Id, accident.RegistrationNumber, accident._firstName, accident._LastName, accident.Date, accident._status, accident._level,accident._damageDescription)
-        { }
-        #endregion
-
     }
 
 

@@ -14,12 +14,13 @@ namespace InsuranceManager.DataAccess
     {
         public DataContext() : base("AccessDbContext")
         {
-           
+            Database.SetInitializer<DataContext>(new MigrateDatabaseToLatestVersion<DataContext, Migrations.Configuration>());
         }
        
         public DbSet<Accident> Accidents { get; set; }
         public DbSet<Models.Task> Tasks { get; set; }
         public DbSet<Workshop> Workshops { get; set; }
+        public DbSet<Mechanic> Mechanics { get; set; }
         public void WithDataContext(Action<DataContext> action)
         {
             using (var context = new DataContext())
@@ -27,7 +28,12 @@ namespace InsuranceManager.DataAccess
                 action(context);
             }
         }
-      
+
+        public override int SaveChanges()
+        {
+            return base.SaveChanges();
+        }
+
 
         public void Test()
         {

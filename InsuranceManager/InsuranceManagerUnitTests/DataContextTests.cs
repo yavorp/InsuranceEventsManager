@@ -27,7 +27,8 @@ namespace InsuranceManagerUnitTests
             using (var context = new DataContext())
             {
                 var accidents = context.Accidents.ToList();
-                Assert.NotNull(accidents);
+                var mechanics = context.Mechanics.ToHashSet();
+                Assert.IsTrue(accidents.Count!=0);
             }
            
         }
