@@ -2,8 +2,59 @@
                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                 xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
-                Title="MainWindow" Height="350" Width="525">
+                xmlns:local="clr-namespace:InsuranceManagerTlerikUI"
+                Title="Insurance Manager" Height="350" Width="525">
     <Grid>
-        <Label Name="LblTest" Content="qj"/>
+        <telerik:RadTabControl Name="MainTabControl" Grid.Row="1" VerticalAlignment="Top" DropDownDisplayMode="Visible" ScrollMode="Viewport" BorderThickness="0">
+            <telerik:RadTabItem DropDownContent="Accidents" Header="Инциденти" >
+                <telerik:RadTabItem.Content>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <telerik:RadGridView Name="accidentsGrid" AutoGenerateColumns="False">
+                            <telerik:RadGridView.Columns>
+                                <telerik:GridViewDataColumn  DataMemberBinding="{Binding ID}"   Header="Id"/>
+                                <telerik:GridViewDataColumn DataMemberBinding="{Binding FullNameOfPerson}"  Header="Име"/>
+                                <telerik:GridViewDataColumn  DataMemberBinding="{Binding RegNumber}" Header="Регистрационен номер"/>
+                                <telerik:GridViewDataColumn  Header="Описание" DataMemberBinding="{Binding Description}" />
+                                <telerik:GridViewDataColumn Header="Ниво на щети"/>
+                                <telerik:GridViewDataColumn Header="Дата на инцидента"/>
+                                <telerik:GridViewDataColumn Header="Последно обновявае"/>
+                                <!--<telerik:GridViewDataColumn Header="Статус"/>-->
+                            </telerik:RadGridView.Columns>
+                        </telerik:RadGridView>
+                    </Grid>
+                </telerik:RadTabItem.Content>
+            </telerik:RadTabItem>
+            <telerik:RadTabItem DropDownContent="AccidentsToBeHandled" Header="Инциденти за обработкa" >
+
+            </telerik:RadTabItem>
+            <telerik:RadTabItem DropDownContent="Statistics" Header="Статистика" >
+                <telerik:RadTabItem.Content>
+                    <telerik:RadPieChart HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,0,0,0">
+                        <telerik:PieSeries>
+                            <telerik:PieSeries.SliceStyles>
+                                <Style TargetType="Path">
+                                    <Setter Property="Fill" Value="Blue"/>
+                                </Style>
+                                <Style TargetType="Path">
+                                    <Setter Property="Fill" Value="Red"/>
+                                </Style>
+                                <Style TargetType="Path">
+                                    <Setter Property="Fill" Value="Green"/>
+                                </Style>
+                            </telerik:PieSeries.SliceStyles>
+                            <telerik:PieSeries.DataPoints>
+                                <telerik:PieDataPoint  IsSelected="False" OffsetFromCenter="0" Value="21"/>
+                                <telerik:PieDataPoint IsSelected="False"  OffsetFromCenter="0" Value="3"/>
+                                <telerik:PieDataPoint IsSelected="False" OffsetFromCenter="0" Value="3"/>
+                            </telerik:PieSeries.DataPoints>
+                        </telerik:PieSeries>
+                    </telerik:RadPieChart>
+                </telerik:RadTabItem.Content>
+            </telerik:RadTabItem>
+        </telerik:RadTabControl>
     </Grid>
 </Window>

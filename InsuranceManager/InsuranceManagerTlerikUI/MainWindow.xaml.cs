@@ -13,24 +13,51 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using InsuranceManagerTlerikUI.Code;
+using System.Collections.ObjectModel;
+using Telerik.Windows.Controls;
+using Telerik.Windows.Controls.GridView;
+using Telerik.Windows.Controls.Input;
+using Telerik.Windows.Data;
+using System.ComponentModel;
 
 namespace InsuranceManagerTlerikUI
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
+    /// 
     public partial class MainWindow : Window
     {
+        List<Accident> accidents;
+        ObservableCollection<AccidentUtil> accidentView;
         public MainWindow()
         {
             InitializeComponent();
-            List<Accident> accidents;
             using (InsuranceManager.DataAccess.DataContext context = new InsuranceManager.DataAccess.DataContext())
             {
                 accidents = context.Accidents.ToList();
             }
-            LblTest.Content = accidents[0].FirstName + ' ' + accidents[0].LastName + ' ' + accidents[0].Description;
+            accidentView = new ObservableCollection<AccidentUtil>();
+            foreach (var item in accidents)
+            {
+                accidentView.Add(new AccidentUtil(item));
+            }
+            this.accidentsGrid.ItemsSource = accidentView;
+        }
+
+        private void RadGridView_SelectionChanged(object sender, Telerik.Windows.Controls.SelectionChangeEventArgs e)
+        {
+
+        }
+
+        private void HandlerForChange(object sender, RoutedEventArgs args)
+        {
             
+        }
+
+        private void GridViewColumn_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
 
         }
     }
