@@ -13,18 +13,29 @@
                             <RowDefinition/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
-                        <telerik:RadGridView Name="accidentsGrid" AutoGenerateColumns="False">
+                        <telerik:RadGridView Name="accidentsGrid" AutoGenerateColumns="False" Cursor="Arrow">
                             <telerik:RadGridView.Columns>
-                                <telerik:GridViewDataColumn  DataMemberBinding="{Binding ID}"   Header="Id"/>
-                                <telerik:GridViewDataColumn DataMemberBinding="{Binding FullNameOfPerson}"  Header="Име"/>
-                                <telerik:GridViewDataColumn  DataMemberBinding="{Binding RegNumber}" Header="Регистрационен номер"/>
-                                <telerik:GridViewDataColumn  Header="Описание" DataMemberBinding="{Binding Description}" />
-                                <telerik:GridViewDataColumn Header="Ниво на щети"/>
-                                <telerik:GridViewDataColumn Header="Дата на инцидента"/>
-                                <telerik:GridViewDataColumn Header="Последно обновявае"/>
-                                <!--<telerik:GridViewDataColumn Header="Статус"/>-->
+                                <telerik:GridViewDataColumn IsReadOnly="True" DataMemberBinding="{Binding ID}"   Header="Id"/>
+                                <telerik:GridViewDataColumn IsReadOnly="True" DataMemberBinding="{Binding FullNameOfPerson}"  Header="Име"/>
+                                <telerik:GridViewDataColumn IsReadOnly="True" DataMemberBinding="{Binding RegNumber}" Header="Регистрационен номер"/>
+                                <telerik:GridViewDataColumn IsReadOnly="True" Header="Описание" DataMemberBinding="{Binding Description}" />
+                                <telerik:GridViewDataColumn IsReadOnly="True" Header="Ниво на щети" DataMemberBinding="{Binding DamageLevel}" />
+                                <telerik:GridViewDataColumn IsReadOnly="True" Header="Дата на инцидента" DataMemberBinding="{Binding AccidentDate}"/>
+                                <telerik:GridViewDataColumn IsReadOnly="True" Header="Последно обновявае" DataMemberBinding="{Binding LastModified}"/>
+                                <telerik:GridViewDataColumn IsReadOnly="True" Header="Дата на създаване" DataMemberBinding="{Binding CreatedDate}"/>
+                                <telerik:GridViewComboBoxColumn Header="Статус"
+                                                                DataMemberBinding="{Binding StatusId}"
+                                                                UniqueName="StatusUtil"
+                                                                ItemsSource="{Binding StatusUtils}"
+                                                                SelectedValueMemberPath="Id"
+                                                                DisplayMemberPath="Name"
+                                                                />
+
                             </telerik:RadGridView.Columns>
                         </telerik:RadGridView>
+                        <telerik:RadDataPager Grid.Row="1" x:Name="radDataPager" 
+                          Source="{Binding Items, ElementName=accidentsGrid}" 
+                          PageSize="10" />
                     </Grid>
                 </telerik:RadTabItem.Content>
             </telerik:RadTabItem>

@@ -8,12 +8,13 @@ using System.Threading.Tasks;
 
 namespace InsuranceManager.Models
 {
-    public enum StatusProp
+    public enum Status
     {
         None=0,
         ToBeHandled = 1,
         LowPriority = 2,
-        Declined = 3
+        Declined = 3,
+        Handled=4
     }
 
     public enum DamageLevel
@@ -41,10 +42,8 @@ namespace InsuranceManager.Models
         public DateTime AccidentDate { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime LastModified { get; set; }
-        public StatusProp Status { get; set; }
+        public Status Status { get; set; }
         public DamageLevel DamageLevel { get; set; }
-
-        public event PropertyChangedEventHandler PropertyChanged;
         #endregion
     }
 

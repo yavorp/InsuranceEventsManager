@@ -1,5 +1,4 @@
-﻿using InsuranceManager.Models;
-using InsuranceManager.DataAccess;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,11 +23,6 @@ namespace InsuranceManagerApp
     {
         public MainWindow()
         {
-            InitializeComponent();
-            List<Accident> accidents=new List<Accident>();
-            using (InsuranceManager.DataAccess.DataContext context = new InsuranceManager.DataAccess.DataContext())
-                accidents = context.Accidents.ToList();
-
         }
     }
 }

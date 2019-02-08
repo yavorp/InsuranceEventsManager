@@ -33,17 +33,19 @@ namespace InsuranceManagerTlerikUI
         ObservableCollection<AccidentUtil> accidentView;
         public MainWindow()
         {
-            InitializeComponent();
             using (InsuranceManager.DataAccess.DataContext context = new InsuranceManager.DataAccess.DataContext())
             {
                 accidents = context.Accidents.ToList();
             }
+
+            
             accidentView = new ObservableCollection<AccidentUtil>();
             foreach (var item in accidents)
             {
                 accidentView.Add(new AccidentUtil(item));
             }
             this.accidentsGrid.ItemsSource = accidentView;
+            InitializeComponent();
         }
 
         private void RadGridView_SelectionChanged(object sender, Telerik.Windows.Controls.SelectionChangeEventArgs e)
@@ -59,6 +61,15 @@ namespace InsuranceManagerTlerikUI
         private void GridViewColumn_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
 
+        }
+
+        private static ObservableCollection<T> GetObservable<T, U>(this IEnumerable<U> items, Func<U, T> map) where T: class
+        {
+            return items.Aggregate(new ObservableCollection<T>(), (acc, i) =>
+            {
+                acc.Add(map(i));
+                return acc;
+            });
         }
     }
 }
