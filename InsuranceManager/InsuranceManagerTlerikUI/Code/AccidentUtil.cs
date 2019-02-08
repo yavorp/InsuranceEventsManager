@@ -38,18 +38,41 @@ namespace InsuranceManagerTlerikUI.Code
                 _id = value >= 0 ? value : 0;
             }
         }
-        
+
         public ObservableCollection<StatusUtil> StatusUtils
         {
             get
             {
-                if(null==this._statusUtils)
+                if (null == this._statusUtils)
                 {
                     _statusUtils = new ObservableCollection<StatusUtil>();
                 }
                 return _statusUtils;
             }
         }
+
+        public int StatusId
+        {
+            get
+            {
+                return statusId;
+            }
+            set
+            {
+                statusId = value >= 0 ? value : 0;
+                OnPropertyChanged("StatusId");
+                OnPropertyChanged("StatusName");
+            }
+        }
+        public string StatusName
+        {
+            get
+            {
+                var selectedStatus = _statusUtils.Where(s => s.Id == StatusId).FirstOrDefault();
+                return selectedStatus.Name;
+            }
+        }
+
         public string FullNameOfPerson
         {
             get
@@ -62,14 +85,7 @@ namespace InsuranceManagerTlerikUI.Code
             }
         }
 
-        public string StatusName
-        {
-            get
-            {
-                var selectedStatus = _statusUtils.Where(s => s.Id == StatusId).FirstOrDefault();
-                return selectedStatus.Name;
-            }
-        }
+     
         public string Description
         {
             get
@@ -96,19 +112,7 @@ namespace InsuranceManagerTlerikUI.Code
         public string AccidentDate { get; set; }
         public DateTime CreatedDate { get; set; }
         public string LastModified { get; set; }
-        public int StatusId
-        {
-            get
-            {
-                return statusId;
-            }
-            set
-            {
-                statusId = value >= 0 ? value : 0;
-                OnPropertyChanged(nameof(StatusId));
-                OnPropertyChanged(nameof(StatusName));
-            }
-        }
+        
         private int statusId;
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -121,33 +125,33 @@ namespace InsuranceManagerTlerikUI.Code
             FullNameOfPerson = $"{accident.FirstName} { accident.LastName}"; // I set name this way because It is required property from the database it cannot be null
             Description = accident.Description;
             RegNumber = accident.RegistrationNumber;
-            if(accident.AccidentDate==DateTime.MinValue)
+            if (accident.AccidentDate == DateTime.MinValue)
             {
                 AccidentDate = "";
             }
             else
-            AccidentDate = $"{accident.AccidentDate.Day.ToString()}.{accident.AccidentDate.Month.ToString()}.{accident.AccidentDate.Year}";
+                AccidentDate = $"{accident.AccidentDate.Day.ToString()}.{accident.AccidentDate.Month.ToString()}.{accident.AccidentDate.Year}";
 
             AccidentDate = accident.AccidentDate.ToString("dd.MM.yyyy");
-           
+
             StatusId = (int)accident.Status;
 
-            if(accident.LastModified==DateTime.MinValue)
+            if (accident.LastModified == DateTime.MinValue)
             {
                 LastModified = "";
             }
             else
             {
-                LastModified= $"{accident.LastModified.Day.ToString()}.{accident.LastModified.Month.ToString()}.{accident.LastModified.Year}";
+                LastModified = $"{accident.LastModified.Day.ToString()}.{accident.LastModified.Month.ToString()}.{accident.LastModified.Year}";
             }
             CreatedDate = accident.CreatedDate;
 
-            _statusUtils = Enum.GetValues(typeof(Status)).Cast<Status>()
-                .Aggregate(new ObservableCollection<StatusUtil>(), (accummulate, item) =>
-                {
-                    accummulate.Add(new StatusUtil((int)item, StatusTexts[item]));
-                    return accummulate;
-                });
+            //_statusUtils = Enum.GetValues(typeof(Status)).Cast<Status>()
+            //    .Aggregate(new ObservableCollection<StatusUtil>(), (accummulate, item) =>
+            //    {
+            //        accummulate.Add(new StatusUtil((int)item, StatusTexts[item]));
+            //        return accummulate;
+            //    });
 
             _statusUtils = new ObservableCollection<StatusUtil>();
             _statusUtils.Add(new StatusUtil(0, "Необработено"));
@@ -172,10 +176,18 @@ namespace InsuranceManagerTlerikUI.Code
             _statusUtils[3] = new StatusUtil(3, "Отказано събитие");
         }
 
-        protected virtual void OnPropertyChanged(string args)
+        protected virtual void OnPropertyChanged(PropertyChangedEventArgs args)
         {
             PropertyChangedEventHandler handler = this.PropertyChanged;
-                handler?.Invoke(this, new PropertyChangedEventArgs(args));
+            if (handler != null)
+            {
+                handler(this, args);
+            }
+        }
+
+        private void OnPropertyChanged(string propertyName)
+        {
+            this.OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
         }
     }
 }

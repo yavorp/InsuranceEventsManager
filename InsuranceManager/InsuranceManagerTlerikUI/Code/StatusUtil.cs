@@ -23,6 +23,7 @@ namespace InsuranceManagerTlerikUI.Code
             set
             {
                 _id = value >= 0 ? value : 0;
+                this.OnPropertyChanged("Id");
             }
         }
 
