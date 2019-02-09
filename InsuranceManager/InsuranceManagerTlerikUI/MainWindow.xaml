@@ -25,10 +25,11 @@
                                 <telerik:GridViewDataColumn IsReadOnly="True" Header="Дата на създаване" DataMemberBinding="{Binding CreatedDate}"/>
                                 <telerik:GridViewComboBoxColumn Header="Статус"
                                                                 DataMemberBinding="{Binding StatusId}"
-                                                                UniqueName="StatusUtil"
+                                                                UniqueName="StatusCombobox"
                                                                 ItemsSource="{Binding StatusUtils}"
                                                                 SelectedValueMemberPath="Id"
-                                                                DisplayMemberPath="Name"
+                                                                DisplayMemberPath="Name" Focusable="True"
+                                                                
                                                                 />
 
                             </telerik:RadGridView.Columns>

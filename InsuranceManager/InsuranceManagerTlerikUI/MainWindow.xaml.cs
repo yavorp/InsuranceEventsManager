@@ -44,6 +44,7 @@ namespace InsuranceManagerTlerikUI
             foreach (var item in accidents)
             {
                 accidentView.Add(new AccidentUtil(item));
+               accidentView[accidentView.Count - 1].PropertyChanged += HandlerForChange;
             }
             this.accidentsGrid.ItemsSource = accidentView;
             this.DataContext = accidentView;
@@ -55,16 +56,31 @@ namespace InsuranceManagerTlerikUI
 
         }
 
-        private void HandlerForChange(object sender, RoutedEventArgs args)
+        private void HandlerForChange(object sender, EventArgs args)
         {
-            
+            AccidentUtil accident = (AccidentUtil)sender;
+            using (InsuranceManager.DataAccess.DataContext context = new InsuranceManager.DataAccess.DataContext())
+            {
+                var s = context.Accidents.Where(a => a.Id == accident.ID);
+                s.FirstOrDefault().Status = (Status)accident.StatusId;
+                context.SaveChanges();
+            }
         }
 
         private void GridViewColumn_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
+            
 
         }
 
+        private void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            RadComboBox combo = (RadComboBox)sender;
+
+            if (combo.Name == "StatusCombobox")
+            {
+            }
+        }
         //private static ObservableCollection<T> GetObservable<T, U>(this IEnumerable<U> items, Func<U, T> map) where T: class
         //{
         //    return items.Aggregate(new ObservableCollection<T>(), (acc, i) =>

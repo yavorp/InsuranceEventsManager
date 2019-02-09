@@ -59,9 +59,12 @@ namespace InsuranceManagerTlerikUI.Code
             }
             set
             {
-                statusId = value >= 0 ? value : 0;
-                OnPropertyChanged("StatusId");
-                OnPropertyChanged("StatusName");
+                if (statusId != value)
+                {
+                    statusId = value >= 0 ? value : 0;
+                    OnPropertyChanged("StatusId");
+                    OnPropertyChanged("StatusName");
+                }
             }
         }
         public string StatusName
