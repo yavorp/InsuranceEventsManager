@@ -22,10 +22,5 @@ namespace InsuranceManager.Models
 
         public DateTime EndDate { get; set; }
 
-        public bool IsOverlaped(Task task)
-        {
-            return !(StartDate.Date > task.EndDate.Date || EndDate.Date < task.StartDate);
-        }
-
     }
 }

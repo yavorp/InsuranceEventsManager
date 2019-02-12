@@ -133,8 +133,6 @@ namespace InsuranceManagerTlerikUI.Code
                 AccidentDate = "";
             }
             else
-                AccidentDate = $"{accident.AccidentDate.Day.ToString()}.{accident.AccidentDate.Month.ToString()}.{accident.AccidentDate.Year}";
-
             AccidentDate = accident.AccidentDate.ToString("dd.MM.yyyy");
 
             StatusId = (int)accident.Status;
@@ -160,7 +158,7 @@ namespace InsuranceManagerTlerikUI.Code
             _statusUtils.Add(new StatusUtil(0, "Необработено"));
             _statusUtils.Add(new StatusUtil(1, "Готово за обработка"));
             _statusUtils.Add(new StatusUtil(2, "С нисък приоритет"));
-            _statusUtils.Add(new StatusUtil(3, "Необработено"));
+            _statusUtils.Add(new StatusUtil(3, "Отказано събитие"));
 
         }
         public AccidentUtil()
@@ -187,7 +185,15 @@ namespace InsuranceManagerTlerikUI.Code
                 handler(this, args);
             }
         }
-
+        public static string DateToString(DateTime date)
+        {
+            string result = "";
+            if(date!=DateTime.MinValue)
+            {
+                result = date.ToString("dd.MM.yyyy");
+            }
+            return result;
+        }
         private void OnPropertyChanged(string propertyName)
         {
             this.OnPropertyChanged(new PropertyChangedEventArgs(propertyName));

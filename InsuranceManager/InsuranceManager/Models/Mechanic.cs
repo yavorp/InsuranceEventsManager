@@ -36,7 +36,5 @@ namespace InsuranceManager.Models
 
         public List<Task> Tasks { get; set; }
 
-        public bool IsFree(Task task) => Tasks.All(t => !t.IsOverlaped(task));
-
     }
 }

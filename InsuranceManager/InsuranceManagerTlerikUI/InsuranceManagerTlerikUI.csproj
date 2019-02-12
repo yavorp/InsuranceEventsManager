@@ -110,6 +110,7 @@
     <Compile Include="Code\AccidentUtil.cs" />
     <Compile Include="Code\MechanicUtil.cs" />
     <Compile Include="Code\StatusUtil.cs" />
+    <Compile Include="Code\TaskUtil.cs" />
     <Compile Include="Code\WorkshopUtil.cs" />
     <Compile Include="HandleWindow.xaml.cs">
       <DependentUpon>HandleWindow.xaml</DependentUpon>

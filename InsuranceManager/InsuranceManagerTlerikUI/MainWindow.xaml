@@ -10,7 +10,7 @@
                 <telerik:RadTabItem.Content>
                     <Grid>
                         <Grid.RowDefinitions>
-                            <RowDefinition/>
+                            <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <telerik:RadGridView Name="accidentsGrid" AutoGenerateColumns="False" Cursor="Arrow">
@@ -22,7 +22,7 @@
                                 <telerik:GridViewDataColumn IsReadOnly="True" Header="Ниво на щети" DataMemberBinding="{Binding DamageLevel}" />
                                 <telerik:GridViewDataColumn IsReadOnly="True" Header="Дата на инцидента" DataMemberBinding="{Binding AccidentDate}"/>
                                 <telerik:GridViewDataColumn IsReadOnly="True" Header="Последно обновявае" DataMemberBinding="{Binding LastModified}"/>
-                                <telerik:GridViewDataColumn IsReadOnly="True" Header="Дата на създаване" DataMemberBinding="{Binding CreatedDate}"/>
+                                <telerik:GridViewDataColumn IsReadOnly="True" Header="Дата на създаване" DataMemberBinding="{Binding CreatedDate}" DataFormatString="dd/MM/yyyy"/>
                                 <telerik:GridViewComboBoxColumn Header="Статус"
                                                                 DataMemberBinding="{Binding StatusId}"
                                                                 UniqueName="StatusCombobox"
@@ -41,12 +41,31 @@
                 </telerik:RadTabItem.Content>
             </telerik:RadTabItem>
             <telerik:RadTabItem DropDownContent="AccidentsToBeHandled" Header="Инциденти за обработкa" >
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <telerik:RadGridView AutoGenerateColumns="False" Cursor="Arrow" x:Name="accidentsToBeHandledGrid">
+                        <telerik:RadGridView.Columns>
+                            <telerik:GridViewDataColumn IsReadOnly="True" DataMemberBinding="{Binding ID}"   Header="Id"/>
+                            <telerik:GridViewDataColumn IsReadOnly="True" DataMemberBinding="{Binding FullNameOfPerson}"  Header="Име"/>
+                            <telerik:GridViewDataColumn IsReadOnly="True" DataMemberBinding="{Binding RegNumber}" Header="Регистрационен номер"/>
+                            <telerik:GridViewDataColumn IsReadOnly="True" Header="Описание" DataMemberBinding="{Binding Description}" />
+                            <telerik:GridViewDataColumn IsReadOnly="True" Header="Ниво на щети" DataMemberBinding="{Binding DamageLevel}" />
+                            <telerik:GridViewDataColumn IsReadOnly="True" Header="Дата на инцидента" DataMemberBinding="{Binding AccidentDate}"/>
+                            <telerik:GridViewDataColumn IsReadOnly="True" Header="Последно обновявае" DataMemberBinding="{Binding LastModified}"/>
+                            <telerik:GridViewDataColumn IsReadOnly="True" Header="Дата на създаване" DataMemberBinding="{Binding CreatedDate}" DataFormatString="dd/MM/yyyy"/>
+                            <telerik:GridViewDataColumn IsReadOnly="True" Header="Статус" DataMemberBinding="{Binding StatusName}"/>
+                        </telerik:RadGridView.Columns>
+                    </telerik:RadGridView>
 
+                </Grid>
             </telerik:RadTabItem>
             <telerik:RadTabItem DropDownContent="Statistics" Header="Статистика" >
                 <telerik:RadTabItem.Content>
                     <telerik:RadPieChart HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,0,0,0">
-                        <telerik:PieSeries>
+                        <telerik:PieSeries x:Name="PieChartForStatistics" ItemsSource="{Binding}">
                             <telerik:PieSeries.SliceStyles>
                                 <Style TargetType="Path">
                                     <Setter Property="Fill" Value="Blue"/>
