@@ -13,20 +13,20 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
-                        <telerik:RadGridView Name="accidentsGrid" AutoGenerateColumns="False" Cursor="Arrow">
+                        <telerik:RadGridView Name="accidentsGrid" AutoGenerateColumns="False" Cursor="Arrow" SelectionChanged="RadGridView_SelectionChanged">
                             <telerik:RadGridView.Columns>
                                 <telerik:GridViewDataColumn IsReadOnly="True" DataMemberBinding="{Binding ID}"   Header="Id"/>
                                 <telerik:GridViewDataColumn IsReadOnly="True" DataMemberBinding="{Binding FullNameOfPerson}"  Header="Име"/>
                                 <telerik:GridViewDataColumn IsReadOnly="True" DataMemberBinding="{Binding RegNumber}" Header="Регистрационен номер"/>
                                 <telerik:GridViewDataColumn IsReadOnly="True" Header="Описание" DataMemberBinding="{Binding Description}" />
                                 <telerik:GridViewDataColumn IsReadOnly="True" Header="Ниво на щети" DataMemberBinding="{Binding DamageLevel}" />
-                                <telerik:GridViewDataColumn IsReadOnly="True" Header="Дата на инцидента" DataMemberBinding="{Binding AccidentDate}"/>
+                                <telerik:GridViewDataColumn IsReadOnly="True" Header="Дата на инцидента" DataMemberBinding="{Binding AccidentDate}" DataFormatString="dd.MM.yyyy"/>
                                 <telerik:GridViewDataColumn IsReadOnly="True" Header="Последно обновявае" DataMemberBinding="{Binding LastModified}"/>
                                 <telerik:GridViewDataColumn IsReadOnly="True" Header="Дата на създаване" DataMemberBinding="{Binding CreatedDate}" DataFormatString="dd/MM/yyyy"/>
                                 <telerik:GridViewComboBoxColumn Header="Статус"
                                                                 DataMemberBinding="{Binding StatusId}"
                                                                 UniqueName="StatusCombobox"
-                                                                ItemsSource="{Binding StatusUtils}"
+                                                                ItemsSource="{Binding StatusUtils, UpdateSourceTrigger=PropertyChanged}"
                                                                 SelectedValueMemberPath="Id"
                                                                 DisplayMemberPath="Name" Focusable="True"
                                                                 
@@ -34,7 +34,7 @@
 
                             </telerik:RadGridView.Columns>
                         </telerik:RadGridView>
-                        <telerik:RadDataPager Grid.Row="1" x:Name="radDataPager" 
+                        <telerik:RadDataPager Grid.Row="1" x:Name="radDataPagerNotHandledGrid" 
                           Source="{Binding Items, ElementName=accidentsGrid}" 
                           PageSize="10" />
                     </Grid>
@@ -43,47 +43,42 @@
             <telerik:RadTabItem DropDownContent="AccidentsToBeHandled" Header="Инциденти за обработкa" >
                 <Grid>
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                    <telerik:RadGridView AutoGenerateColumns="False" Cursor="Arrow" x:Name="accidentsToBeHandledGrid">
+                    <telerik:RadGridView AutoGenerateColumns="False" Cursor="Arrow" x:Name="accidentsToBeHandledGrid" SelectionChanged="RadGridView_SelectionChanged">
                         <telerik:RadGridView.Columns>
                             <telerik:GridViewDataColumn IsReadOnly="True" DataMemberBinding="{Binding ID}"   Header="Id"/>
                             <telerik:GridViewDataColumn IsReadOnly="True" DataMemberBinding="{Binding FullNameOfPerson}"  Header="Име"/>
                             <telerik:GridViewDataColumn IsReadOnly="True" DataMemberBinding="{Binding RegNumber}" Header="Регистрационен номер"/>
                             <telerik:GridViewDataColumn IsReadOnly="True" Header="Описание" DataMemberBinding="{Binding Description}" />
                             <telerik:GridViewDataColumn IsReadOnly="True" Header="Ниво на щети" DataMemberBinding="{Binding DamageLevel}" />
-                            <telerik:GridViewDataColumn IsReadOnly="True" Header="Дата на инцидента" DataMemberBinding="{Binding AccidentDate}"/>
+                            <telerik:GridViewDataColumn IsReadOnly="True" Header="Дата на инцидента" DataMemberBinding="{Binding AccidentDate}" DataFormatString="dd.MM.yyyy"/>
                             <telerik:GridViewDataColumn IsReadOnly="True" Header="Последно обновявае" DataMemberBinding="{Binding LastModified}"/>
-                            <telerik:GridViewDataColumn IsReadOnly="True" Header="Дата на създаване" DataMemberBinding="{Binding CreatedDate}" DataFormatString="dd/MM/yyyy"/>
+                            <telerik:GridViewDataColumn IsReadOnly="True" Header="Дата на създаване" DataMemberBinding="{Binding CreatedDate}" DataFormatString="dd.MM.yyyy"/>
                             <telerik:GridViewDataColumn IsReadOnly="True" Header="Статус" DataMemberBinding="{Binding StatusName}"/>
                         </telerik:RadGridView.Columns>
                     </telerik:RadGridView>
+                    <telerik:RadDataPager Grid.Row="1" x:Name="radDataPagerForHandledGrid" 
+                          Source="{Binding Items, ElementName=accidentsGrid}" 
+                          PageSize="10" />
+                    <Button Grid.Row="2" Content="Обработи" Name="BtnSendAccidentToHandleWindow" Click="BtnSendAccidentToHandleWindow_Click"/>
 
                 </Grid>
             </telerik:RadTabItem>
             <telerik:RadTabItem DropDownContent="Statistics" Header="Статистика" >
                 <telerik:RadTabItem.Content>
-                    <telerik:RadPieChart HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,0,0,0">
-                        <telerik:PieSeries x:Name="PieChartForStatistics" ItemsSource="{Binding}">
-                            <telerik:PieSeries.SliceStyles>
-                                <Style TargetType="Path">
-                                    <Setter Property="Fill" Value="Blue"/>
-                                </Style>
-                                <Style TargetType="Path">
-                                    <Setter Property="Fill" Value="Red"/>
-                                </Style>
-                                <Style TargetType="Path">
-                                    <Setter Property="Fill" Value="Green"/>
-                                </Style>
-                            </telerik:PieSeries.SliceStyles>
-                            <telerik:PieSeries.DataPoints>
-                                <telerik:PieDataPoint  IsSelected="False" OffsetFromCenter="0" Value="21"/>
-                                <telerik:PieDataPoint IsSelected="False"  OffsetFromCenter="0" Value="3"/>
-                                <telerik:PieDataPoint IsSelected="False" OffsetFromCenter="0" Value="3"/>
-                            </telerik:PieSeries.DataPoints>
-                        </telerik:PieSeries>
-                    </telerik:RadPieChart>
+                    <Grid Name="StatisticsGrid">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Name="TxtUnhandledEvents" Text="{Binding}" HorizontalAlignment="Center" Margin="40" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Row="1" Name="TxtToBeHandledEvents" Text="{Binding}" HorizontalAlignment="Center" Margin="40" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Row="2" Name="TxtHandledEvents" Text="{Binding}" HorizontalAlignment="Center"  Margin="40" VerticalAlignment="Center"/>
+                    </Grid>
                 </telerik:RadTabItem.Content>
             </telerik:RadTabItem>
         </telerik:RadTabControl>

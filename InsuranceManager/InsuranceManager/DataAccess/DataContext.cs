@@ -21,6 +21,22 @@ namespace InsuranceManager.DataAccess
         public DbSet<Models.Task> Tasks { get; set; }
         public DbSet<Workshop> Workshops { get; set; }
         public DbSet<Mechanic> Mechanics { get; set; }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+
+            modelBuilder.Entity<InsuranceManager.Models.Task>()
+                .HasRequired(t => t.Mechanic)
+                .WithMany(m => m.Tasks)
+                .HasForeignKey(t => t.MechanicId);
+
+
+            modelBuilder.Entity<Mechanic>()
+              .HasRequired(m => m.Workshop)
+              .WithMany(w => w.Mechanics)
+              .HasForeignKey(m => m.WorkshopId);
+          
+        }
         public void WithDataContext(Action<DataContext> action)
         {
             using (var context = new DataContext())

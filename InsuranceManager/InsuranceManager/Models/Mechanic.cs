@@ -10,7 +10,6 @@ namespace InsuranceManager.Models
 {
     public class Mechanic
     {
-        private int _id;
 
         [Key]
         public int Id { get; set; }

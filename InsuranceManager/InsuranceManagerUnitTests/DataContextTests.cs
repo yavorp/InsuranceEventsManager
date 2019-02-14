@@ -1,4 +1,5 @@
 ﻿using InsuranceManager.DataAccess;
+using System.Data.Entity;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -31,6 +32,28 @@ namespace InsuranceManagerUnitTests
                 Assert.IsTrue(accidents.Count!=0);
             }
            
+        }
+
+        [Test]
+        public void ShouldReturnAllMechanics()
+        {
+            using (var context = new DataContext())
+            {
+                var workshops = context.Workshops.Include(t=>t.Mechanics.Select(m=>m.Tasks)).ToList();
+
+                Assert.IsTrue(workshops[0].Mechanics.Count>0);
+            }
+        }
+
+        [Test]
+        public void ShouldReturnTasks()
+        {
+            using (var context = new DataContext())
+            {
+                var tasks = context.Tasks.ToList();
+
+                Assert.IsTrue(tasks.Count>0);
+            }
         }
     }
 }

@@ -16,8 +16,6 @@ namespace InsuranceManagerTlerikUI.Code
         private string _fullNameOfPerson;
         private string _description;
         private string _regNumber;
-        private string _accidentDate;
-        private DateTime _createdDate;
         private string _lastModified;
         private ObservableCollection<StatusUtil> _statusUtils;
 
@@ -88,7 +86,7 @@ namespace InsuranceManagerTlerikUI.Code
             }
         }
 
-     
+
         public string Description
         {
             get
@@ -112,10 +110,14 @@ namespace InsuranceManagerTlerikUI.Code
             }
         }
 
-        public string AccidentDate { get; set; }
+        public DateTime AccidentDate { get; set; }
         public DateTime CreatedDate { get; set; }
-        public string LastModified { get; set; }
-        
+        public string LastModified
+        {
+            get { return _lastModified; }
+            set { _lastModified = value ?? ""; }
+        }
+
         private int statusId;
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -128,15 +130,8 @@ namespace InsuranceManagerTlerikUI.Code
             FullNameOfPerson = $"{accident.FirstName} { accident.LastName}"; // I set name this way because It is required property from the database it cannot be null
             Description = accident.Description;
             RegNumber = accident.RegistrationNumber;
-            if (accident.AccidentDate == DateTime.MinValue)
-            {
-                AccidentDate = "";
-            }
-            else
-            AccidentDate = accident.AccidentDate.ToString("dd.MM.yyyy");
-
+            AccidentDate = accident.AccidentDate;
             StatusId = (int)accident.Status;
-
             if (accident.LastModified == DateTime.MinValue)
             {
                 LastModified = "";
@@ -146,13 +141,6 @@ namespace InsuranceManagerTlerikUI.Code
                 LastModified = $"{accident.LastModified.Day.ToString()}.{accident.LastModified.Month.ToString()}.{accident.LastModified.Year}";
             }
             CreatedDate = accident.CreatedDate;
-
-            //_statusUtils = Enum.GetValues(typeof(Status)).Cast<Status>()
-            //    .Aggregate(new ObservableCollection<StatusUtil>(), (accummulate, item) =>
-            //    {
-            //        accummulate.Add(new StatusUtil((int)item, StatusTexts[item]));
-            //        return accummulate;
-            //    });
 
             _statusUtils = new ObservableCollection<StatusUtil>();
             _statusUtils.Add(new StatusUtil(0, "Необработено"));
@@ -166,7 +154,7 @@ namespace InsuranceManagerTlerikUI.Code
             ID = 0;
             FullNameOfPerson = "";
             Description = "";
-            AccidentDate = "";
+            AccidentDate = DateTime.Now;
             RegNumber = "";
             StatusId = 0;
             LastModified = "";
@@ -188,7 +176,7 @@ namespace InsuranceManagerTlerikUI.Code
         public static string DateToString(DateTime date)
         {
             string result = "";
-            if(date!=DateTime.MinValue)
+            if (date != DateTime.MinValue)
             {
                 result = date.ToString("dd.MM.yyyy");
             }

@@ -32,34 +32,67 @@ namespace InsuranceManagerTlerikUI
     /// 
     public partial class MainWindow : Window
     {
-        List<Accident> accidents;
         ObservableCollection<AccidentUtil> accidentView = new ObservableCollection<AccidentUtil>();
+        ObservableCollection<AccidentUtil> accidentsToBeHandled = new ObservableCollection<AccidentUtil>();
+        ObservableCollection<AccidentUtil> handledAccidents = new ObservableCollection<AccidentUtil>();
+        List<CustomClass> statistics = new List<CustomClass>();
+        //Accidents that are not handled are with index=0, accidents to be handled are with index=1, handled accidents index=2
         public MainWindow()
         {
             InitializeComponent();
+
             System.Threading.Tasks.Task.Run(async () =>
             {
-                Thread.Sleep(9000);
                 accidentView = await GetAccidentsAsync();
+                accidentsToBeHandled = await GeetAccidentsToBeHandledAsync();
+                handledAccidents = await GeetAccidentsHandledAsync();
                 accidentsGrid.Dispatcher.Invoke(() =>
                 {
                     accidentsGrid.ItemsSource = accidentView;
+                    statistics.Add(new CustomClass() { StringVal = "Инциденти, които не са обработени", Value = accidentView.Count });
                     accidentsGrid.DataContext = accidentView;
-                });
-            });
-        }
+                    statistics.Add(new CustomClass() { Value = accidentsToBeHandled.Count, StringVal = "Събития, които ще се обработват" });
+                    statistics.Add(new CustomClass() { Value = handledAccidents.Count, StringVal = "Обработени събития" });
 
+                    accidentsToBeHandledGrid.ItemsSource = accidentsToBeHandled;
+                    TxtUnhandledEvents.DataContext = statistics[0];
+                    TxtToBeHandledEvents.DataContext = statistics[1];
+                    TxtHandledEvents.DataContext = statistics[2];
+                    
+                });
+
+            });
+
+        }
         private void RadGridView_SelectionChanged(object sender, Telerik.Windows.Controls.SelectionChangeEventArgs e)
         {
 
         }
-        async System.Threading.Tasks.Task<ObservableCollection<AccidentUtil>> GetAccidentsAsync()
+
+        private async System.Threading.Tasks.Task<ObservableCollection<AccidentUtil>> GetAccidentsAsync()
         {
+            List<Accident> accidents;
+
             using (InsuranceManager.DataAccess.DataContext context = new InsuranceManager.DataAccess.DataContext())
             {
-                accidents = await context.Accidents.ToListAsync();
+                accidents = await context.Accidents.Where(a => a.Status != Status.ToBeHandled && a.Status != Status.Handled).ToListAsync();
             }
 
+            return accidents.GetObservable(a =>
+              {
+                  var item = new AccidentUtil(a);
+                  item.PropertyChanged += HandlerForChange;
+                  return item;
+              });
+        }
+
+        private async System.Threading.Tasks.Task<ObservableCollection<AccidentUtil>> GeetAccidentsToBeHandledAsync()
+        {
+            List<Accident> accidents;
+            using (InsuranceManager.DataAccess.DataContext context = new InsuranceManager.DataAccess.DataContext())
+            {
+                accidents = await context.Accidents.Where(a => a.Status == Status.ToBeHandled).ToListAsync();
+            }
             return accidents.GetObservable(a =>
             {
                 var item = new AccidentUtil(a);
@@ -68,50 +101,96 @@ namespace InsuranceManagerTlerikUI
             });
         }
 
+        private void HandledEvent()
+        {
+            System.Threading.Tasks.Task.Run(async () =>
+            {
+                accidentsToBeHandled = await GeetAccidentsToBeHandledAsync();
+                handledAccidents = await GeetAccidentsHandledAsync();
+                accidentsToBeHandledGrid.Dispatcher.Invoke(() =>
+                {
+                    accidentsToBeHandledGrid.ItemsSource = accidentsToBeHandled;
+                    statistics[1].Value = accidentsToBeHandled.Count;
+                    statistics[2].Value = handledAccidents.Count;
 
+                });
+
+            });
+
+        }
+
+        private async System.Threading.Tasks.Task<ObservableCollection<AccidentUtil>> GeetAccidentsHandledAsync()
+        {
+            List<Accident> accidents;
+            using (InsuranceManager.DataAccess.DataContext context = new InsuranceManager.DataAccess.DataContext())
+            {
+                accidents = await context.Accidents.Where(a => a.Status == Status.Handled).ToListAsync();
+            }
+            return accidents.GetObservable(a =>
+            {
+                var item = new AccidentUtil(a);
+                item.PropertyChanged += HandlerForChange;
+                return item;
+            });
+        }
+
+        //Updates database and UI grids EventsToBeHandled and Events that are not Handled
         private async void HandlerForChange(object sender, EventArgs args)
         {
             AccidentUtil accident = (AccidentUtil)sender;
             using (InsuranceManager.DataAccess.DataContext context = new InsuranceManager.DataAccess.DataContext())
             {
-                var accidentDb = await context.Accidents.FindAsync(accident.ID);
+                var accidentDb = await context.Accidents.FirstAsync(a => a.Id == accident.ID);
                 accidentDb.Status = (Status)accident.StatusId;
                 accidentDb.LastModified = DateTime.Now;
-                var f = (AccidentUtil)sender;
-                f.LastModified = AccidentUtil.DateToString(accidentDb.LastModified);
-                await context.SaveChangesAsync();
+                accident.LastModified = AccidentUtil.DateToString(accidentDb.LastModified);
+                context.SaveChanges();
+                if (accidentDb.Status == Status.ToBeHandled && !accidentsToBeHandled.Contains(accident))
+                {
+                    accidentView.Remove(accident);
+                    statistics[0].Value = accidentView.Count;
+                    accidentsToBeHandled.Add(accident);
+                    statistics[1].Value = accidentsToBeHandled.Count;
+                }
+
             }
         }
 
         private void OpenWindow()
         {
             HandleWindow window = new HandleWindow();
+            Dispatcher.Invoke(() => { window.accidentToBeHandled = accidentsToBeHandledGrid.SelectedItem as AccidentUtil; });
+            window.myEventHandler += HandledEvent;
             window.Show();
+            System.Windows.Threading.Dispatcher.Run();
         }
 
-        private void OpenNewWindowHandler(object sender, EventArgs args)
+        private void BtnSendAccidentToHandleWindow_Click(object sender, RoutedEventArgs e)
         {
-            System.Threading.Tasks.Task.Factory.StartNew(OpenWindow);
-        }
-
-
-    }
-
-    public static class Ext
-    {
-        public static ObservableCollection<T> GetObservable<T, U>(this IEnumerable<U> items, Func<U, T> map) where T : class
-        {
-            return items.Aggregate(new ObservableCollection<T>(), (acc, i) =>
+            var item = accidentsToBeHandledGrid.SelectedItem;
+            if (item != null)
             {
-                acc.Add(map(i));
-                return acc;
-            });
+                Thread newWindowThread = new Thread(new ThreadStart(OpenWindow));
+                newWindowThread.SetApartmentState(ApartmentState.STA);
+                newWindowThread.IsBackground = true;
+                newWindowThread.Start();
+            }
+            else
+            {
+                MessageBox.Show("Изберете събитие за обработка");
+            }
         }
+
     }
 
-    internal class SomeInfo
+    //helper class to visualize info in Pie chart for statistics
+    public class CustomClass
     {
         public int Value { get; set; }
-        public string Label { get; set; }
+        public string StringVal { get; set; }
+        public override string ToString()
+        {
+            return $"{StringVal} : {Value}";
+        }
     }
 }

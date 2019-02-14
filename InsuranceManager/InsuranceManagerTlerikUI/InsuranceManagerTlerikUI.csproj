@@ -112,6 +112,7 @@
     <Compile Include="Code\StatusUtil.cs" />
     <Compile Include="Code\TaskUtil.cs" />
     <Compile Include="Code\WorkshopUtil.cs" />
+    <Compile Include="Extension.cs" />
     <Compile Include="HandleWindow.xaml.cs">
       <DependentUpon>HandleWindow.xaml</DependentUpon>
     </Compile>
