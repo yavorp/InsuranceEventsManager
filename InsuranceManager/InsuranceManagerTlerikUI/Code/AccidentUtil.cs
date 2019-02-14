@@ -16,6 +16,7 @@ namespace InsuranceManagerTlerikUI.Code
         private string _fullNameOfPerson;
         private string _description;
         private string _regNumber;
+        private string _damageLevel;
         private string _lastModified;
         private ObservableCollection<StatusUtil> _statusUtils;
 
@@ -34,6 +35,18 @@ namespace InsuranceManagerTlerikUI.Code
             set
             {
                 _id = value >= 0 ? value : 0;
+            }
+        }
+
+        public string DamageLevel
+        {
+            get
+            {
+                return _damageLevel;
+            }
+            set
+            {
+                _damageLevel = value ?? "";
             }
         }
 
@@ -122,8 +135,6 @@ namespace InsuranceManagerTlerikUI.Code
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public string DamageLevel { get; set; }
-
         public AccidentUtil(Accident accident)
         {
             ID = accident.Id;
@@ -141,6 +152,13 @@ namespace InsuranceManagerTlerikUI.Code
                 LastModified = $"{accident.LastModified.Day.ToString()}.{accident.LastModified.Month.ToString()}.{accident.LastModified.Year}";
             }
             CreatedDate = accident.CreatedDate;
+            switch(accident.DamageLevel)
+            {
+                case InsuranceManager.Models.DamageLevel.High: { DamageLevel = "Високо"; break; }
+                case InsuranceManager.Models.DamageLevel.Low: { DamageLevel = "Ниско"; break; }
+                case InsuranceManager.Models.DamageLevel.Medium: { DamageLevel = "Средно"; break; }
+                default: DamageLevel = "Няма информация"; break;
+            }
 
             _statusUtils = new ObservableCollection<StatusUtil>();
             _statusUtils.Add(new StatusUtil(0, "Необработено"));
@@ -155,6 +173,7 @@ namespace InsuranceManagerTlerikUI.Code
             FullNameOfPerson = "";
             Description = "";
             AccidentDate = DateTime.Now;
+            this.DamageLevel = "";
             RegNumber = "";
             StatusId = 0;
             LastModified = "";

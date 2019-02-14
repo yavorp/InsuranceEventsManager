@@ -10,21 +10,23 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="2*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <TextBlock Text="Избери сервиз:" Margin="20" HorizontalAlignment="Center" FontSize="20"/>
-        <ComboBox Grid.Column="1" Name="CmbWorkshop" Margin="30" DropDownClosed="CmbWorkshop_DropDownClosed" />
-        <TextBlock Text="Избери механик:" Margin="20" HorizontalAlignment="Center" Grid.Row="1" FontSize="20"   />
-        <ComboBox Grid.Column="1" Name="CmbMechanic"  Grid.Row="1" Margin="30" IsEnabled="False" DropDownClosed="CmbMechanic_DropDownClosed" />
-        <telerik:RadDatePicker Margin="60,20" Name="DateTimePickerStartDate" DateTimeWatermarkContent="Избери начална дата" Grid.Row="2" IsEnabled="False" LostFocus="DateTimePickerStartDate_LostFocus"></telerik:RadDatePicker>
-        <TextBox Grid.Column="1" Grid.Row="2" Name="TxtBoxNumberOfDays"  Margin="30" IsEnabled="False"/>
-        <Button Name="BtnHandleEvenet" Click="BtnHandleEvenet_Click" Grid.Row="3" Content="Обработи" Margin="30" />
-        <Button Grid.Column="1" Grid.Row="3" Margin="30" Name="CloseWindows" Content="Затвори прозореца" Click="CloseWindows_Click"/>
+        <TextBlock Text="Избери сервиз:" Margin="20" HorizontalAlignment="Center" FontSize="20" Grid.Row="1" />
+        <ComboBox Grid.Column="1" Name="CmbWorkshop" Margin="30" DropDownClosed="CmbWorkshop_DropDownClosed" Grid.Row="1" />
+        <TextBlock Text="Избери механик:" Margin="20" HorizontalAlignment="Center" Grid.Row="2" FontSize="20"   />
+        <ComboBox Grid.Column="1" Name="CmbMechanic"  Grid.Row="2" Margin="30" IsEnabled="False" DropDownClosed="CmbMechanic_DropDownClosed" />
+        <telerik:RadDatePicker Margin="60,20" Name="DateTimePickerStartDate" DateTimeWatermarkContent="Избери начална дата" Grid.Row="3" IsEnabled="False" LostFocus="DateTimePickerStartDate_LostFocus"></telerik:RadDatePicker>
+        <TextBox Grid.Column="1" Grid.Row="3" Name="TxtBoxNumberOfDays"  Margin="30" IsEnabled="False"/>
+        <Button Name="BtnHandleEvenet" Click="BtnHandleEvenet_Click" Grid.Row="4" Content="Обработи" Margin="30" />
+        <Button Grid.Column="1" Grid.Row="4" Margin="30" Name="CloseWindows" Content="Затвори прозореца" Click="CloseWindows_Click"/>
+        <TextBlock Grid.Row="0" Text="{Binding}" Name="TxtAccident"/>
     </Grid>
 </Window>

@@ -46,6 +46,7 @@ namespace InsuranceManagerTlerikUI
                 CmbWorkshop.Dispatcher.Invoke(() =>
                 {
                     CmbWorkshop.ItemsSource = workshopsView;
+                    TxtAccident.DataContext = accidentToBeHandled.RegNumber;
                 });
             });
         }
